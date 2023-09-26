@@ -50,9 +50,9 @@ const Login = ({ navigation }) => {
    return (
       <SafeAreaView style={styles.container}>
          <View style={{ flex: 1, justifyContent: 'flex-end', paddingBottom: 20 }}>
-         <Image
-         style = {{marginLeft: 75}}
-         source={require('../assets/images/tmans.png')}></Image>
+            <Image
+               style={{ marginLeft: 75 }}
+               source={require('../assets/images/tmans.png')}></Image>
          </View>
          <View style={styles.inputContainer}>
             <View style={styles.inputBox}>
@@ -80,10 +80,10 @@ const Login = ({ navigation }) => {
                <TouchableOpacity onPress={() => navigation.navigate('Sign_up')} style={styles.find_button}>
                   <Text style={{ fontWeight: '500' }}>회원가입</Text>
                </TouchableOpacity>
-               <TouchableOpacity onPress={() => navigation.navigate('find_id')} style={styles.find_button}>
+               <TouchableOpacity onPress={() => navigation.navigate('Find_id')} style={styles.find_button}>
                   <Text style={{ fontWeight: '500' }}>아이디 찾기</Text>
                </TouchableOpacity>
-               <TouchableOpacity onPress={() => navigation.navigate('find_pw')} style={styles.find_button}>
+               <TouchableOpacity onPress={() => navigation.navigate('Find_pw')} style={styles.find_button}>
                   <Text style={{ fontWeight: '500' }}>비밀번호 찾기</Text>
                </TouchableOpacity>
             </View>
@@ -133,20 +133,20 @@ const styles = StyleSheet.create({
    },
    inputContainer: {
       paddingHorizontal: 30,
-      marginTop: 5, 
+      marginTop: 5,
    },
    inputBox: {
       marginBottom: 5,
-      borderColor: 'grey', 
-      borderWidth: 1, 
-      borderRadius: 5, 
-      padding: 4, 
+      borderColor: 'grey',
+      borderWidth: 1,
+      borderRadius: 5,
+      padding: 4,
       height: 50,
    },
    image: {
       width: '100%',
       height: 500,
-    },
+   },
 
 });
 

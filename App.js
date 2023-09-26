@@ -7,6 +7,7 @@ import Home from "./screens/Home";
 import Maps from "./screens/Maps";
 import Login from "./screens/Login";
 import Sign_up from "./screens/Sign_up";
+import Find_id from "./screens/Find_id";
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ export default function App() {
         <Stack.Screen name="Maps" component={Maps} options={{ title: '맵' }} />
         <Stack.Screen name="Login" component={Login} options={{ title: '로그인' }} />
         <Stack.Screen name="Sign_up" component={Sign_up} options={{ title: '회원가입' }} />
+        <Stack.Screen name="Find_id" component={Find_id} options={{ title: '아이디 찾기' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
