@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { StyleSheet, View, Dimensions, Text, TouchableOpacity } from 'react-native';
 import { GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { GOOGLE_MAPS_APIKEY } from '../environments';
+import { GOOGLE_MAPS_APIKEY } from '../android/environments';
 import MapViewDirections from 'react-native-maps-directions';
 
 const { width, height } = Dimensions.get("window");

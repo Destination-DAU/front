@@ -1,7 +1,7 @@
 # OSX
 #
 .DS_Store
-environmentts.ts
+
 # Xcode
 #
 build/
@@ -28,14 +28,13 @@ build/
 .idea
 .gradle
 local.properties
+environments.ts
 *.iml
 *.hprof
 .cxx/
 *.keystore
 !debug.keystore
 
-android/
-.properties
 # node.js
 #
 node_modules/
