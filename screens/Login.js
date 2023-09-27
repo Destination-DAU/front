@@ -49,9 +49,9 @@ const Login = ({ navigation }) => {
 
    return (
       <SafeAreaView style={styles.container}>
-         <View style={{ flex: 1, justifyContent: 'flex-end', paddingBottom: 20 }}>
+         <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 20 }}>
             <Image
-               style={{ marginLeft: 75 }}
+               // style={{ marginLeft: 75 }}
                source={require('../assets/images/tmans.png')}></Image>
          </View>
          <View style={styles.inputContainer}>

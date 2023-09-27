@@ -46,6 +46,7 @@ const Sign_up = ({ navigation }) => {
          .then((response) => {
             console.log(response.data);
             if (response.data.success) {
+               Alert.alert('알림', "회원가입이 완료되었습니다.")
                navigation.navigate('Login');
             }
             console.log(response.data.success);
@@ -63,12 +64,12 @@ const Sign_up = ({ navigation }) => {
       <SafeAreaView style={styles.container}>
          <ScrollView>
             <View style={{ flex: 1, justifyContent: 'flex-end', paddingTop: 10 }}>
-            <Image
-         style = {{marginLeft: 75}}
-         source={require('../assets/images/tmans.png')}></Image>
+               <Image
+                  style={{ marginLeft: 75 }}
+                  source={require('../assets/images/tmans.png')}></Image>
             </View>
             <View style={styles.inputContainer}>
-               <Text style={{ color: 'black' }}>이름 *</Text>
+               <Text style={{ color: 'black', paddingBottom: 10 }}>이름 *</Text>
                <View style={styles.inputBox}>
                   <TextInput
                      onChangeText={(text) => setUser_name(text)}
@@ -78,7 +79,7 @@ const Sign_up = ({ navigation }) => {
                   //numberOfLines={}
                   />
                </View>
-               <Text style={{ color: 'black' }}>아이디 *</Text>
+               <Text style={{ color: 'black', paddingBottom: 10 }}>아이디 *</Text>
                <View style={styles.inputBox}>
                   <TextInput
                      placeholder={'아이디를 입력해 주세요.'}
@@ -88,7 +89,7 @@ const Sign_up = ({ navigation }) => {
                      style={{ flex: 1 }}
                   />
                </View>
-               <Text style={{ color: 'black' }}>비밀번호 *</Text>
+               <Text style={{ color: 'black', paddingBottom: 10 }}>비밀번호 *</Text>
                <View style={styles.inputBox}>
                   <TextInput
                      onChangeText={(text) => setUser_pw(text)}
@@ -98,7 +99,7 @@ const Sign_up = ({ navigation }) => {
                      secureTextEntry={true}
                   />
                </View>
-               <Text style={{ color: 'black' }}>비밀번호 확인 *</Text>
+               <Text style={{ color: 'black', paddingBottom: 10 }}>비밀번호 확인 *</Text>
                <View style={styles.inputBox}>
                   <TextInput
                      onChangeText={(text) => setUser_confirmPsword(text)}
@@ -108,7 +109,7 @@ const Sign_up = ({ navigation }) => {
                      secureTextEntry={true}
                   />
                </View>
-               <Text style={{ color: 'black' }}>성별 *</Text>
+               <Text style={{ color: 'black', paddingBottom: 10 }}>성별 *</Text>
                <View style={[styles.radioContainer, { flexDirection: 'row' }]}>
                   <TouchableOpacity
                      style={[
