@@ -1,16 +1,25 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
+import { StyleSheet, View, Dimensions, Text, TouchableOpacity, Button } from 'react-native';
+
 
 function Home({ navigation }) {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>Home!</Text>
       <Button
-        title="Go to Maps"
-        onPress={() => navigation.navigate("Maps")}
+        title="Create rooms"
+        onPress={() => navigation.navigate("Create_room")}
       />
     </View>
+    
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: ""
+  }
+})
 
 export default Home;

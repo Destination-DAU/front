@@ -4,6 +4,7 @@ import { StyleSheet, View, Dimensions, Text, TouchableOpacity } from 'react-nati
 import { GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { GOOGLE_MAPS_APIKEY } from '../android/environments';
 import MapViewDirections from 'react-native-maps-directions';
+import Geolocation from "react-native-geolocation-service";
 
 const { width, height } = Dimensions.get("window");
 
@@ -11,11 +12,34 @@ const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const INITIAL_POSITION = {
-  latitude: 35.132524,
-  longitude: 128.880033,
+  latitude: 35.106224,
+  longitude: 128.966235,
   latitudeDelta: LATITUDE_DELTA,
   longitudeDelta: LONGITUDE_DELTA,
 };
+
+const reverseGeocode = (latitude, longitude, callback) => {
+  const apiKey = GOOGLE_MAPS_APIKEY; // 자신의 Google Maps API 키로 대체
+
+  // Google Maps Geocoding API 호출
+  fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}&language=ko`)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === 'OK') {
+        const address = data.results[0].formatted_address;
+        console.log('주소:', address);
+        // 여기서 address 변수에 위치의 주소가 저장됩니다.
+        callback(address); // 주소 정보를 콜백으로 전달
+      } else {
+        console.log('주소 반환 실패');
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+
 
 function InputAutocomplete({
   label,
@@ -41,7 +65,7 @@ function InputAutocomplete({
   );
 }
 
-function Maps() {
+function Maps({ navigation }) {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [showDirections, setShowDirections] = useState(false);
@@ -79,6 +103,20 @@ function Maps() {
     }
   };
 
+  const checkRoute = () => {
+    // 출발지, 도착지 데이터 전송
+    if (origin && destination) {
+      reverseGeocode(origin.latitude, origin.longitude, (startAddress) => {
+        reverseGeocode(destination.latitude, destination.longitude, (endAddress) => {
+          navigation.navigate('Create_room', {
+            startDestination: startAddress, // 출발지 주소
+            endDestination: endAddress, // 목적지 주소
+          });
+        });
+      });
+    }
+  };
+
   const onplaceSelected = (details, flag) => {
     const set = flag === "origin" ? setOrigin : setDestination;
     const position = {
@@ -111,9 +149,12 @@ function Maps() {
         )}
       </MapView>
       <View style={styles.searchContainer}>
+      {/* <TouchableOpacity>
+          <Text style = {styles.buttonText2}>내 위치 가져오기</Text>
+        </TouchableOpacity> */}
         <InputAutocomplete label="출발지 설정" onPlaceSelected={(details) => {
           onplaceSelected(details, "origin");
-        }} />
+        }}/>
         <InputAutocomplete label="도착지 설정" onPlaceSelected={(details) => {
           onplaceSelected(details, "destination");
         }} />
@@ -122,6 +163,12 @@ function Maps() {
           onPress={traceRoute}
         >
           <Text style={styles.buttonText}>경로 보기</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={checkRoute}
+        >
+          <Text style={styles.buttonText}>선택</Text>
         </TouchableOpacity>
 
         {distance && duration ? (
@@ -140,7 +187,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: '100%',
-    height: '65%',
+    height: '59%',
     top: 0,
   },
   searchContainer: {
@@ -168,7 +215,15 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: "center",
-  }
+  },
+  buttonText2: {
+    textAlign: 'right',
+    color: 'blue',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });
 
 export default Maps;
