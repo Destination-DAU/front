@@ -136,7 +136,7 @@ function Maps({ navigation }) {
       >
         {origin && <Marker coordinate={origin} />}
         {destination && <Marker coordinate={destination} />}
-        {showDirections && origin && destination && (
+        {origin && destination &&(
           <MapViewDirections
             origin={origin}
             destination={destination}
