@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { GOOGLE_MAPS_APIKEY } from '../android/environments';
 import MapViewDirections from 'react-native-maps-directions';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -40,23 +40,47 @@ function Create_room({ navigation, route }) {
    const [endDestination, setEndDestination] = useState('');
    const [startDestinationAddress, setStartDestinationAddress] = useState(''); // 출발지 상세 주소
    const [endDestinationAddress, setEndDestinationAddress] = useState(''); // 목적지 상세 주소
+   // const [getOrigin, setgetOrigin] = useState('');
+   // const [getDestination, setgetDestination] = useState('');
+
+   const [showDirections, setShowDirections] = useState(false);
+   const mapRef = useRef(null);
    const [origin, setOrigin] = useState(null);
    const [destination, setDestination] = useState(null);
-   const [showDirections, setShowDirections] = useState(false);
-   const [distance, setDistance] = useState(0);
-   const [duration, setDuration] = useState(0);
-   const mapRef = useRef(null);
+   
+   const edgePaddingValue = 70;
 
+   const edgePadding = {
+     top: edgePaddingValue,
+     right: edgePaddingValue,
+     bottom: edgePaddingValue,
+     left: edgePaddingValue,
+   };
    // MapsScreen에서 선택된 출발지와 목적지를 처리합니다.
    React.useEffect(() => {
       console.log('route.params:', route.params);
       if (route.params && route.params.startDestination) {
          setStartDestination(route.params.startDestination);
+         console.log(route.params.endDestination)
       }
       if (route.params && route.params.endDestination) {
          setEndDestination(route.params.endDestination);
+         console.log(route.params.startDestination)
+      }
+      if (route.params && route.params.origin){
+         setOrigin(route.params.origin)
+      }
+      if (route.params && route.params.destination){
+         setDestination(route.params.destination)
       }
    }, [route.params]);
+
+   useEffect(() => {
+      // origin과 destination 값이 존재할 때만 실행
+      if (origin && destination) {
+         mapRef.current?.fitToCoordinates([origin, destination], { edgePadding });
+      }
+   }, [origin, destination]);
 
    // 출발지 주소를 변경할 때 호출되는 함수
    const handleStartDestinationAddressChange = (text) => {
@@ -75,20 +99,7 @@ function Create_room({ navigation, route }) {
    const handleEndDestinationPress = () => {
       navigation.navigate('Maps', { type: 'end' });
    };
-
-   const checkRoute = () => {
-      if (origin && destination) {
-        reverseGeocode(origin.latitude, origin.longitude, (startAddress) => {
-          reverseGeocode(destination.latitude, destination.longitude, (endAddress) => {
-            navigation.navigate('Maps', {
-              startDestination: startAddress, // 출발지 주소
-              endDestination: endAddress, // 목적지 주소
-            });
-          });
-        });
-      }
-    };
-
+   
    return (
       <ScrollView style={styles.scrollView} contentContainerStyle={{ flexGrow : 1 }}>
          <View style={styles.container}>
@@ -106,19 +117,18 @@ function Create_room({ navigation, route }) {
                   provider={PROVIDER_GOOGLE}
                   initialRegion={INITIAL_POSITION}
                >
-                  {origin && <Marker coordinate={origin} />}
-                  {destination && <Marker coordinate={destination} />}
-                  {showDirections && origin && destination && (
-                     <MapViewDirections
-                        origin={origin}
-                        destination={destination}
-                        apikey={GOOGLE_MAPS_APIKEY}
-                        strokeColor="#6644ff"
-                        strokeWidth={5}
-                        onReady={traceRouteOnReady}
-                        mode="TRANSIT"
-                     />
-                  )}
+        {origin && <Marker coordinate={origin} />}
+        {destination && <Marker coordinate={destination} />}
+        {origin && destination &&(
+          <MapViewDirections
+            origin={origin}
+            destination={destination}
+            apikey={GOOGLE_MAPS_APIKEY}
+            strokeColor="#6644ff"
+            strokeWidth={5}
+            mode="TRANSIT"
+          />
+        )}
                </MapView>
                {/* 출발지 입력 상자 */}
                <TouchableOpacity style={[styles.inputBox]} onPress={handleStartDestinationPress}>
@@ -283,7 +293,7 @@ const styles = StyleSheet.create({
    },
    map: {
       width: '100%',
-      height: 110,
+      height: 250,
 
    },
    button: {

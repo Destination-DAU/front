@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { StyleSheet, View, Dimensions, Text, TouchableOpacity } from 'react-native';
 import { GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -81,7 +81,6 @@ function Maps({ navigation }) {
     }
   };
   const edgePaddingValue = 70;
-
   const edgePadding = {
     top: edgePaddingValue,
     right: edgePaddingValue,
@@ -103,6 +102,19 @@ function Maps({ navigation }) {
     }
   };
 
+  useEffect(() => {
+    // origin과 destination 값이 존재할 때만 실행
+    if (origin && destination) {
+       mapRef.current?.fitToCoordinates([origin, destination], { edgePadding });
+    }
+    else {
+      if(!origin)
+        moveTo(destination)
+      if(!destination)
+        moveTo(origin)
+    }
+ }, [origin, destination]);
+ 
   const checkRoute = () => {
     // 출발지, 도착지 데이터 전송
     if (origin && destination) {
@@ -111,6 +123,8 @@ function Maps({ navigation }) {
           navigation.navigate('Create_room', {
             startDestination: startAddress, // 출발지 주소
             endDestination: endAddress, // 목적지 주소
+            origin : origin,
+            destination : destination,
           });
         });
       });
@@ -124,7 +138,6 @@ function Maps({ navigation }) {
       longitude: details?.geometry.location.lng || 0,
     };
     set(position);
-    moveTo(position);
   };
   return (
     <View style={styles.container}>
@@ -158,12 +171,12 @@ function Maps({ navigation }) {
         <InputAutocomplete label="도착지 설정" onPlaceSelected={(details) => {
           onplaceSelected(details, "destination");
         }} />
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.button}
           onPress={traceRoute}
         >
           <Text style={styles.buttonText}>경로 보기</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           style={styles.button}
           onPress={checkRoute}
@@ -187,12 +200,12 @@ const styles = StyleSheet.create({
   },
   map: {
     width: '100%',
-    height: '59%',
+    height: '71%',
     top: 0,
   },
   searchContainer: {
     position: "absolute",
-    width: "90%",
+    width: "100%",
     backgroundColor: "white",
     shadowColor: "black",
     shadowOffset: { width: 2, height: 2 },
@@ -200,8 +213,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     padding: 8,
     borderRadius: 8,
-    bottom: 20,
-    left: 18,
+    bottom: 0,
+    // left: 18,
   },
   input: {
     borderColor: "#888",
