@@ -32,7 +32,7 @@ const Login = ({ navigation }) => {
          .then((response) => {
             console.log(response.data);
             if (response.data.success) {
-               navigation.navigate('Home');
+               navigation.navigate('Home', {user_id: user_id});
             }
             if (response.data.msg == "존재하지 않는 아이디입니다.") {
                Alert.alert('알림', "존재하지 않는 아이디입니다.");
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
 
    button: {
       alignItems: 'center',
-      backgroundColor: 'black',
+      backgroundColor: 'blue',
       borderRadius: 10,
    },
 

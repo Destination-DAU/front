@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
 
    button: {
       alignItems: 'center',
-      backgroundColor: 'black',
+      backgroundColor: 'blue',
       borderRadius: 10,
    },
 
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
       marginRight: 5,
    },
    radioSelected: {
-      backgroundColor: 'black', // 선택된 항목의 배경색을 파란색으로 설정합니다.
+      backgroundColor: 'blue', // 선택된 항목의 배경색을 파란색으로 설정합니다.
    },
    radioText: {
       color: 'black',

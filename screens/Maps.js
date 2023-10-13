@@ -65,14 +65,14 @@ function InputAutocomplete({
   );
 }
 
-function Maps({ navigation }) {
+function Maps({ navigation, route }) {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [showDirections, setShowDirections] = useState(false);
   const [distance, setDistance] = useState(0);
   const [duration, setDuration] = useState(0);
   const mapRef = useRef(null);
-
+  const user_id = route.params.user_id;
   const moveTo = async (position) => {
     const camera = await mapRef.current?.getCamera();
     if (camera) {
@@ -125,6 +125,7 @@ function Maps({ navigation }) {
             endDestination: endAddress, // 목적지 주소
             origin: origin,
             destination: destination,
+            user_id: user_id,
           });
         });
       });

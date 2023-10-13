@@ -4,6 +4,7 @@ import MapViewDirections from 'react-native-maps-directions';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { format } from "date-fns";
 import ko from "date-fns/esm/locale/ko/index.js";
+import axios from 'axios'
 import {
    SafeAreaView,
    TextInput,
@@ -29,11 +30,8 @@ const INITIAL_POSITION = {
    latitudeDelta: LATITUDE_DELTA,
    longitudeDelta: LONGITUDE_DELTA,
 };
-const CreateRoom = () => {
 
-   // 게시물 생성 버튼 누를 시 백으로 데이터 전송
 
-}
 
 
 
@@ -47,10 +45,34 @@ function Create_room({ navigation, route }) {
    const [mode, setMode] = useState('date'); // 모달 유형
    const [visible, setVisible] = useState(false); // 날짜 모달 노출 여부
    const [isModalVisible, setModalVisible] = useState(false); // 인원 모달 노출 여부
-   const [selectedPerson, setSelectedPerson] = useState(); // 선택한 인원
-   const [origins, setOrigins] = useState(''); // 출발지 상세 주소
-   const [Destinations, setDestinations] = useState(''); // 목적지 상세주소
-   const [selectDate, onChangeDate] = useState(new Date()); // 선택 날짜
+   const [person, setPerson] = useState(); // 선택한 인원
+   const [startPoint, setStartPoint] = useState(''); // 출발지 상세 주소
+   const [endPoint, setEndPoint] = useState(''); // 목적지 상세주소
+   const [startTime, setStartTime] = useState(new Date()); // 선택 날짜
+   const [title, setTitle] = useState();
+   const [user_id, setUserId] = useState();
+
+
+   const CreateRoom = async () => {
+      await axios.post('http://10.0.2.2:3000/Create_room', {
+         user_id: user_id,
+         room_startPoint: startPoint,
+         room_endPoint: endPoint,
+         room_name: title,
+         room_person: person,
+         room_startTime: startTime,
+      })
+         .then((response) => {
+            console.log(response.data);
+            if (response.data.success) {
+               navigation.navigate('Home', {user_id : user_id});
+            }
+         })
+         .catch((error) => {
+            console.log(error);
+         });
+      // 게시물 생성 버튼 누를 시 백으로 데이터 전송
+      };
 
    const openModal = () => {
       setModalVisible(true);
@@ -61,12 +83,12 @@ function Create_room({ navigation, route }) {
    };
 
    const handlePersonSelect = (value) => {
-      setSelectedPerson(value);
+      setPerson(value);
    };
 
    const confirmPersonSelection = () => {
       // 선택한 인원을 personCheck 상태로 반영
-      setSelectedPerson(selectedPerson);
+      setPerson(person);
       closeModal();
    };
 
@@ -82,7 +104,7 @@ function Create_room({ navigation, route }) {
 
    const onConfirm = (selectedDate) => { // 날짜 또는 시간 선택 시
       setVisible(false); // 모달 close
-      onChangeDate(selectedDate); // 선택한 날짜 변경
+      setStartTime(selectedDate); // 선택한 날짜 변경
    };
 
    const onCancel = () => { // 취소 시
@@ -112,6 +134,9 @@ function Create_room({ navigation, route }) {
       if (route.params && route.params.destination) {
          setDestination(route.params.destination)
       }
+      if (route.params && route.params.user_id){
+         setUserId(route.params.user_id)
+      }
    }, [route.params]);
 
    useEffect(() => {
@@ -123,22 +148,22 @@ function Create_room({ navigation, route }) {
 
    // 출발지 주소를 변경할 때 호출되는 함수
    const settingOrigin = (text) => {
-      setOrigins(text);
+      setStartPoint(text);
    };
 
    // 목적지 주소를 변경할 때 호출되는 함수
    const settingDestinations = (text) => {
-      setDestinations(text);
+      setEndPoint(text);
    };
 
    // 출발지 주소 선택
    const handleStartDestinationPress = () => {
-      navigation.navigate('Maps', { type: 'start' });
+      navigation.navigate('Maps', { type: 'start' }, {user_id : user_id});
    };
 
    // 도착지 주소 선택
    const handleEndDestinationPress = () => {
-      navigation.navigate('Maps', { type: 'end' });
+      navigation.navigate('Maps', { type: 'end' }, {user_id : user_id});
    };
 
    const titleSet = (text) => {
@@ -189,7 +214,7 @@ function Create_room({ navigation, route }) {
                      <TextInput
                         style={[styles.inputBox]}
                         placeholder="출발지 상세 주소 입력"
-                        value={origins}
+                        value={startPoint}
                         onChangeText={settingOrigin}
                      />
                   </View>
@@ -206,7 +231,7 @@ function Create_room({ navigation, route }) {
                      <TextInput
                         style={[styles.inputBox]}
                         placeholder="목적지 상세 주소 입력"
-                        value={Destinations}
+                        value={endPoint}
                         onChangeText={settingDestinations}
                      />
                   </View>
@@ -219,32 +244,32 @@ function Create_room({ navigation, route }) {
                   출발일자
                </Text>
                <TouchableOpacity style={[styles.inputBox]} onPress={onPressDate}>
-                  <Text style={[styles.inputText4, { color: 'grey' }]}>{selectDate ? format(selectDate, 'yyyy-MM-dd (eee)', { locale: ko }) : '탑승 일자를 설정해 주세요.'}</Text>
+                  <Text style={[styles.inputText4, { color: 'grey' }]}>{startTime ? format(startTime, 'yyyy-MM-dd (eee)', { locale: ko }) : '탑승 일자를 설정해 주세요.'}</Text>
                </TouchableOpacity>
                <DateTimePickerModal
                   isVisible={visible}
                   mode={mode}
                   onConfirm={onConfirm}
                   onCancel={onCancel}
-                  date={selectDate}
+                  date={startTime}
                   minimumDate={new Date()} />
                <Text style={styles.inputText3}>
                   출발시간
                </Text>
                <TouchableOpacity style={[styles.inputBox]} onPress={onPressTime}>
-                  <Text style={[styles.inputText4, { color: 'grey' }]}>{selectDate ? format(selectDate, 'HH:MM', { locale: ko }) : '탑승 시간을 설정해 주세요.'}</Text>
+                  <Text style={[styles.inputText4, { color: 'grey' }]}>{startTime ? format(startTime, 'HH:MM', { locale: ko }) : '탑승 시간을 설정해 주세요.'}</Text>
                </TouchableOpacity>
                <DateTimePickerModal
                   isVisible={visible}
                   mode={mode}
                   onConfirm={onConfirm}
                   onCancel={onCancel}
-                  date={selectDate} />
+                  date={startTime} />
                <Text style={styles.inputText3}>
                   인원설정
                </Text>
                <TouchableOpacity onPress={openModal} style={styles.inputBox}>
-                  <Text style={[styles.inputText4, { color: 'grey' }]}>{selectedPerson ? selectedPerson + '인' : '탑승 인원을 설정해주세요.'}</Text>
+                  <Text style={[styles.inputText4, { color: 'grey' }]}>{person ? person + '인' : '탑승 인원을 설정해주세요.'}</Text>
                </TouchableOpacity>
                <Modal
                   animationType="fade"
@@ -259,28 +284,28 @@ function Create_room({ navigation, route }) {
                               onPress={() => handlePersonSelect(2)}
                               style={[
                                  styles.radioButton,
-                                 selectedPerson === 2 ? styles.radioSelected : {},
+                                 person === 2 ? styles.radioSelected : {},
                               ]}
                            >
-                              <Text style={[styles.radioText, { color: selectedPerson === 2 ? 'white' : 'black' }]}>2인</Text>
+                              <Text style={[styles.radioText, { color: person === 2 ? 'white' : 'black' }]}>2인</Text>
                            </TouchableOpacity>
                            <TouchableOpacity
                               onPress={() => handlePersonSelect(3)}
                               style={[
                                  styles.radioButton,
-                                 selectedPerson === 3 ? styles.radioSelected : {},
+                                 person === 3 ? styles.radioSelected : {},
                               ]}
                            >
-                              <Text style={[styles.radioText, { color: selectedPerson === 3 ? 'white' : 'black' }]}>3인</Text>
+                              <Text style={[styles.radioText, { color: person === 3 ? 'white' : 'black' }]}>3인</Text>
                            </TouchableOpacity>
                            <TouchableOpacity
                               onPress={() => handlePersonSelect(4)}
                               style={[
                                  styles.radioButton,
-                                 selectedPerson === 4 ? styles.radioSelected : {},
+                                 person === 4 ? styles.radioSelected : {},
                               ]}
                            >
-                              <Text style={[styles.radioText, { color: selectedPerson === 4 ? 'white' : 'black' }]}>4인</Text>
+                              <Text style={[styles.radioText, { color: person === 4 ? 'white' : 'black' }]}>4인</Text>
                            </TouchableOpacity>
                         </View>
                         <TouchableOpacity onPress={confirmPersonSelection} style={styles.confirmButton}>
