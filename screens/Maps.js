@@ -105,16 +105,16 @@ function Maps({ navigation }) {
   useEffect(() => {
     // origin과 destination 값이 존재할 때만 실행
     if (origin && destination) {
-       mapRef.current?.fitToCoordinates([origin, destination], { edgePadding });
+      mapRef.current?.fitToCoordinates([origin, destination], { edgePadding });
     }
     else {
-      if(!origin)
+      if (!origin)
         moveTo(destination)
-      if(!destination)
+      if (!destination)
         moveTo(origin)
     }
- }, [origin, destination]);
- 
+  }, [origin, destination]);
+
   const checkRoute = () => {
     // 출발지, 도착지 데이터 전송
     if (origin && destination) {
@@ -123,8 +123,8 @@ function Maps({ navigation }) {
           navigation.navigate('Create_room', {
             startDestination: startAddress, // 출발지 주소
             endDestination: endAddress, // 목적지 주소
-            origin : origin,
-            destination : destination,
+            origin: origin,
+            destination: destination,
           });
         });
       });
@@ -147,9 +147,11 @@ function Maps({ navigation }) {
         provider={PROVIDER_GOOGLE}
         initialRegion={INITIAL_POSITION}
       >
-        {origin && <Marker coordinate={origin} />}
-        {destination && <Marker coordinate={destination} />}
-        {origin && destination &&(
+        {origin && <Marker coordinate={origin}
+          image={require('../assets/images/origin.png')} />}
+        {destination && <Marker coordinate={destination}
+          image={require('../assets/images/destination.png')} />}
+        {origin && destination && (
           <MapViewDirections
             origin={origin}
             destination={destination}
@@ -162,12 +164,12 @@ function Maps({ navigation }) {
         )}
       </MapView>
       <View style={styles.searchContainer}>
-      {/* <TouchableOpacity>
+        {/* <TouchableOpacity>
           <Text style = {styles.buttonText2}>내 위치 가져오기</Text>
         </TouchableOpacity> */}
         <InputAutocomplete label="출발지 설정" onPlaceSelected={(details) => {
           onplaceSelected(details, "origin");
-        }}/>
+        }} />
         <InputAutocomplete label="도착지 설정" onPlaceSelected={(details) => {
           onplaceSelected(details, "destination");
         }} />
@@ -221,13 +223,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   button: {
-    backgroundColor: "#bbb",
+    backgroundColor: "blue",
     paddingVertical: 12,
     marginTop: 16,
     borderRadius: 4,
   },
   buttonText: {
     textAlign: "center",
+    color : 'white'
   },
   buttonText2: {
     textAlign: 'right',
