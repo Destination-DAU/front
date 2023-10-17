@@ -61,6 +61,10 @@ function Create_room({ navigation, route }) {
          room_name: title,
          room_person: person,
          room_startTime: startTime,
+         room_origin_lat: origin.latitude,
+         room_origin_lon: origin.longitude,
+         room_destination_lat: destination.latitude,
+         room_destination_lon: destination.longitude,
       })
          .then((response) => {
             console.log(response.data);
@@ -257,7 +261,7 @@ function Create_room({ navigation, route }) {
                   출발시간
                </Text>
                <TouchableOpacity style={[styles.inputBox]} onPress={onPressTime}>
-                  <Text style={[styles.inputText4, { color: 'grey' }]}>{startTime ? format(startTime, 'HH:MM', { locale: ko }) : '탑승 시간을 설정해 주세요.'}</Text>
+                  <Text style={[styles.inputText4, { color: 'grey' }]}>{startTime ? format(startTime, 'HH:mm', { locale: ko }) : '탑승 시간을 설정해 주세요.'}</Text>
                </TouchableOpacity>
                <DateTimePickerModal
                   isVisible={visible}
@@ -326,7 +330,7 @@ function Create_room({ navigation, route }) {
                      - 해당 서비스는 택시 호출 서비스가 아닌 택시를 함께 탑승할 파티원을 찾는 커뮤니티 서비스 입니다.
                   </Text>
                   <Text style={styles.inputText4}>
-                     - 채팅을 통한 비방 및 욕설을 자재해주세요.
+                     - 채팅을 통한 비방 및 욕설을 자제해주세요.
                   </Text>
                   <Text style={styles.inputText4}>
                      - 부득이하게 탑승을 하지 못할 경우에 반드시 채팅을 통해 파티원에게 미리 알려주세요.
@@ -418,7 +422,8 @@ const styles = StyleSheet.create({
       position: 'relative',
       marginTop: 35,
       width: '100%',
-   },   modalContainer: {
+   },
+   modalContainer: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',

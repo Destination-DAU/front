@@ -11,6 +11,9 @@ import Find_id from "./screens/Find_id";
 import Find_pw from "./screens/Find_pw";
 import New_pw from "./screens/New_pw";
 import Create_room from "./screens/Create_room"
+import Search_room from "./screens/Search_room"
+import Details_room from "./screens/Details_room"
+
 
 const Stack = createStackNavigator();
 
@@ -26,6 +29,10 @@ export default function App() {
         <Stack.Screen name="Find_pw" component={Find_pw} options={{ title: '비밀번호 찾기' }} />
         <Stack.Screen name="New_pw" component={New_pw} options={{ title: '비밀번호 변경' }} />
         <Stack.Screen name="Create_room" component={Create_room} options={{ title: '게시물 생성' }} />
+        <Stack.Screen name="Search_room" component={Search_room} options={{ title: '게시물 찾기' }} />
+        <Stack.Screen name="Details_room" component={Details_room} options={{ title: '게시물 찾기' }} />
+
+
       </Stack.Navigator>
     </NavigationContainer>
   );

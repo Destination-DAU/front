@@ -11,6 +11,10 @@ function Home({ navigation, route }) {
         title="Create rooms"
         onPress={() => navigation.navigate("Create_room", {user_id: user_id})}
       />
+      <Button
+        title="Search rooms"
+        onPress={() => navigation.navigate("Search_room", {user_id: user_id})}
+      />
       <Text>{user_id}</Text>
     </View>
     
