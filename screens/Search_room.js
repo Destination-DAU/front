@@ -5,19 +5,23 @@ import { format } from 'date-fns';
 import ko from "date-fns/esm/locale/ko/index.js";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const Search_room = (props) => {
+const Search_room = ({navigation, route}) => {
     const [roomList, setRoomList] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState(null);
+    const [user_id, setUserId] = useState();
+    const [personList, setPersonList] = useState([]);
     
     const RoomClick = (room) =>{
         setSelectedRoom(room);
-        props.navigation.navigate('Details_room', {room});
+        navigation.navigate('Details_room', {room, user_id: user_id});
     }
     const fetchRoomList = async () => {
         try {
             const response = await axios.get('http://10.0.2.2:3000/Search_room');
+            console.log(response.data)
             if (response.status === 200) {
                 setRoomList(response.data.result);
+                // console.log(response.data);
             } else {
                 console.log('방 목록을 불러올 수 없습니다. 응답 상태 코드: ' + response.status);
             }
@@ -26,10 +30,19 @@ const Search_room = (props) => {
         }
     };
 
+
+
     useEffect(() => {
         fetchRoomList();
     }, []);
 
+    React.useEffect(() => {
+        console.log('route.params:', route.params);
+        if (route.params && route.params.user_id){
+           setUserId(route.params.user_id)
+        }
+     }, [route.params]);
+     
     return (
         <ScrollView>
             <View style={styles.container}>
@@ -66,7 +79,7 @@ const Search_room = (props) => {
                                     source={require('../assets/images/people.png')}
                                 />
                                 <Text style={styles.locationText}>
-                                    {room.room_person}인
+                                    {room.user2 == null ? '1' : room.user3 == null ? '2' : room.user4 == null ? '3' : '4'} / {room.room_person} 인
                                 </Text>
                             </View>
                         </TouchableOpacity>

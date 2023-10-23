@@ -13,6 +13,9 @@ import New_pw from "./screens/New_pw";
 import Create_room from "./screens/Create_room"
 import Search_room from "./screens/Search_room"
 import Details_room from "./screens/Details_room"
+import Join_room from "./screens/Join_room"
+import Chat from "./screens/Chat"
+
 
 
 const Stack = createStackNavigator();
@@ -31,7 +34,8 @@ export default function App() {
         <Stack.Screen name="Create_room" component={Create_room} options={{ title: '게시물 생성' }} />
         <Stack.Screen name="Search_room" component={Search_room} options={{ title: '게시물 찾기' }} />
         <Stack.Screen name="Details_room" component={Details_room} options={{ title: '게시물 찾기' }} />
-
+        <Stack.Screen name="Join_room" component={Join_room} options={{ title: '게시물' }} />
+        <Stack.Screen name="Chat" component={Chat} options={{ title: '채팅' }} />
 
       </Stack.Navigator>
     </NavigationContainer>

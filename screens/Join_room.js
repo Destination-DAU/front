@@ -30,92 +30,16 @@ const INITIAL_POSITION = {
     longitudeDelta: LONGITUDE_DELTA,
 };
 
-const Details_room = ({ navigation, route, props }) => {
+const Join_room = ({ navigation, route, props }) => {
     const { room, user_id } = route.params;
     const [origin, setOrigin] = useState(undefined);
     const [destination, setDestination] = useState(undefined);
     const [isModalVisible, setModalVisible] = useState(false); // 인원 모달 노출 여부
     const closeModal = () => {
         setModalVisible(false);
-     };
-
-    const JoinRoom = async () => {
-        await axios.post('http://10.0.2.2:3000/Detail_room', {
-            room_number: room.room_number,
-            user_id: room.user_id,
-        })
-            .then((response) => {
-                console.log(response.data);
-                console.log(user_id);
-                const userCheck = [response.data.result[0].user1, response.data.result[0].user2, response.data.result[0].user3, response.data.result[0].user4];
-                const checkCol = ["user1", "user2", "user3", "user4"];
-                for (let i = 0; i < userCheck.length; i++) {
-                    if(room.room_person-1 == i && userCheck[i] != null){
-                        setModalVisible(true);
-                        break;
-                    }
-                    if (user_id === userCheck[i]) {
-                        navigation.navigate('Join_room', {room, user_id : user_id});
-                        break;
-                    }
-                    if (userCheck[i] == null) {
-                        // insert 수행
-                        CheckData(checkCol[i]);
-                        navigation.navigate('Join_room', {room, user_id : user_id});
-                        break;
-                    }
-                    
-                }
-
-                if (response.data.success) {
-                    // navigation.navigate('Join_room', {user_id : room.user_id});
-                }
-                else console.log("정보없음");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        // 게시물 생성 버튼 누를 시 백으로 데이터 전송
     };
 
-
-    const CheckData = async (col) => {
-        console.log(col, user_id);
-        await axios.post('http://10.0.2.2:3000/Check_data', {
-            room_number: room.room_number,
-            user: col,
-            user_id: user_id,
-        })
-            .then((response) => {
-                console.log(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
-    }
-
-
-    useEffect(() => {
-        if (room.room_origin_lat && room.room_origin_lon) {
-            setOrigin({
-                latitude: parseFloat(room.room_origin_lat),
-                longitude: parseFloat(room.room_origin_lon),
-            });
-        }
-
-        if (room.room_destination_lat && room.room_destination_lon) {
-            setDestination({
-                latitude: parseFloat(room.room_destination_lat),
-                longitude: parseFloat(room.room_destination_lon),
-            });
-        }
-    }, [room]);
-
-
     const mapRef = useRef(null);
-    // console.log(origin)
-    // console.log(destination)
 
     const edgePaddingValue = 20;
 
@@ -133,23 +57,32 @@ const Details_room = ({ navigation, route, props }) => {
         }
     }, [origin, destination]);
 
-
+    // 사용자 정보 배열 생성
+    const users = [room.user1, room.user2, room.user3, room.user4];
 
     return (
-        <ScrollView style={styles.scrollView} contentContainerStyle={{ flexGrow: 1 }}>
+        <ScrollView style={styles.scrollView}>
             <View style={styles.container}>
                 <View style={{ paddingLeft: 20, paddingRight: 20 }}>
-                    <Text style={[styles.Text1, { fontSize: 18 }]}>{room.room_name}</Text>
+                    <View style={styles.locationContainer}>
+                        <Text style={[styles.Text1, { fontSize: 18 }]}>{room.room_name}</Text>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Chat')} // ChatScreen 대신 실제 Chat 화면의 네비게이션 이름을 사용하십시오.
+                        >
+                            <Image
+                                style={styles.locationIcon2}
+                                source={require('../assets/images/chat.png')} // Chat 버튼 이미지 경로
+                            />
+                        </TouchableOpacity>
+                    </View>
                     <MapView
                         ref={mapRef}
                         style={styles.map}
                         provider={PROVIDER_GOOGLE}
                         initialRegion={INITIAL_POSITION}
                     >
-                        {origin && <Marker coordinate={origin}
-                            image={require('../assets/images/origin.png')} />}
-                        {destination && <Marker coordinate={destination}
-                            image={require('../assets/images/destination.png')} />}
+                        {origin && <Marker coordinate={origin} image={require('../assets/images/origin.png')} />}
+                        {destination && <Marker coordinate={destination} image={require('../assets/images/destination.png')} />}
                         {origin && destination && (
                             <MapViewDirections
                                 origin={origin}
@@ -161,7 +94,7 @@ const Details_room = ({ navigation, route, props }) => {
                             /> // 경로 그리기
                         )}
                     </MapView>
-                    <Text style = {{marginTop : 10}}>출발지</Text>
+                    <Text style={{ marginTop: 10 }}>출발지</Text>
                     <Text style={styles.Text2}>{room.room_startPoint}</Text>
                     <Text>도착지</Text>
                     <Text style={styles.Text2}>{room.room_endPoint}</Text>
@@ -169,13 +102,13 @@ const Details_room = ({ navigation, route, props }) => {
             </View>
             <View style={styles.container2}>
                 <View style={{ paddingLeft: 20, paddingTop: 20 }}>
-                <View style={styles.locationContainer}>
+                    <View style={styles.locationContainer}>
                         <Image
                             style={styles.locationIcon}
                             source={require('../assets/images/crown.png')}
                         />
                         <Text> 방장   </Text>
-                        <Text style={[styles.locationText]}>
+                        <Text style={styles.locationText}>
                             {room.user_id}
                         </Text>
                     </View>
@@ -198,11 +131,29 @@ const Details_room = ({ navigation, route, props }) => {
                         />
                         <Text> 인원   </Text>
                         <Text style={styles.locationText}>
-                        {room.user2 == null ? '1' : room.user3 == null ? '2' : room.user4 == null ? '3' : '4'} / {room.room_person} 인
+                            {users.filter(user => user !== null).length} / {room.room_person} 인
                         </Text>
                     </View>
                 </View>
                 <View style={{ marginBottom: 20 }} />
+            </View>
+            <View style={styles.container3}>
+                <View style={{ paddingLeft: 20, paddingTop: 20 }}>
+                    <Text style={styles.inputText3}>
+                        참여자
+                    </Text>
+                    {users.map((user, index) => (
+                        user !== null && (
+                            <View style={styles.locationContainer} key={index}>
+                                <Image
+                                    style={styles.locationIcon}
+                                    source={require('../assets/images/user.png')}
+                                />
+                                <Text style={{ marginBottom: 10 }}>{user}</Text>
+                            </View>
+                        )
+                    ))}
+                </View>
             </View>
             <View style={styles.container3}>
                 <View style={{ paddingLeft: 20, paddingTop: 20 }}>
@@ -224,36 +175,9 @@ const Details_room = ({ navigation, route, props }) => {
                         </Text>
                     </View>
                 </View>
-                <TouchableOpacity onPress={JoinRoom} style={styles.button}>
-                    <Text style={{
-                        color: 'white',
-                        fontSize: 15,
-                        fontWeight: '400',
-                        padding: 15,
-                    }}
-                    >참여하기</Text>
-                </TouchableOpacity>
-                <Modal
-                  animationType="fade"
-                  transparent={true}
-                  visible={isModalVisible}
-               >
-                  <View style={styles.modalContainer}>
-                     <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>알림</Text>
-                        <Text style={styles.Text3}>방이 가득 찼습니다.</Text>
-                        <TouchableOpacity onPress={closeModal} style={styles.button2}>
-                           <Text style={{
-                        color: 'white',
-                        fontSize: 13,
-                        fontWeight: '400',
-                        padding: 13,
-                    }}>닫기</Text>
-                        </TouchableOpacity>
-                     </View>
-                  </View>
-               </Modal>
             </View>
+            <View style={{ marginBottom: 3 }} />
+            <View style={styles.container3}></View>
         </ScrollView>
     );
 };
@@ -262,17 +186,16 @@ const styles = StyleSheet.create({
     map: {
         width: '100%',
         height: 150,
-
     },
     Text1: {
         marginBottom: 20,
         marginTop: 10,
-        width: 350,
+        width: 320,
         color: 'black',
         fontWeight: 'bold',
     },
     Text2: {
-        marginBottom : 20,
+        marginBottom: 20,
         color: 'black',
     },
     Text3: {
@@ -301,6 +224,10 @@ const styles = StyleSheet.create({
         height: 20, // 이미지 높이 조절
         marginRight: 5, // 이미지와 텍스트 사이 간격
     },
+    locationIcon2: {
+        width: 40, // 이미지 너비 조절
+        height: 40, // 이미지 높이 조절
+    },
     locationText: {
         color: 'black',
     },
@@ -320,6 +247,7 @@ const styles = StyleSheet.create({
         width: '30%',
     },
     inputText3: {
+        marginBottom: 10,
         color: 'black',
         fontSize: 14,
         fontWeight: 'bold'
@@ -334,18 +262,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-     },
-     modalContent: {
+    },
+    modalContent: {
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,
         width: 300,
-     },
-     modalTitle: {
+    },
+    modalTitle: {
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 30,
         textAlign: 'center'
-     },
-})
-export default Details_room;
+    },
+});
+export default Join_room;

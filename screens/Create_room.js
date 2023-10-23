@@ -65,6 +65,7 @@ function Create_room({ navigation, route }) {
          room_origin_lon: origin.longitude,
          room_destination_lat: destination.latitude,
          room_destination_lon: destination.longitude,
+         user1: user_id,
       })
          .then((response) => {
             console.log(response.data);
