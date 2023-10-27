@@ -35,9 +35,55 @@ const Join_room = ({ navigation, route, props }) => {
     const [origin, setOrigin] = useState(undefined);
     const [destination, setDestination] = useState(undefined);
     const [isModalVisible, setModalVisible] = useState(false); // 인원 모달 노출 여부
-    const closeModal = () => {
-        setModalVisible(false);
-    };
+    const [showModal, setShowModal] = useState(false); // 모달 표시 여부 상태
+
+    const handleExitRoom = () => {
+        setShowModal(false);
+        // console.log(room.user1, room.user2, room.user3, room.user4)
+        const userCheck = [room.user1, room.user2, room.user3, room.user4]
+        if (Object.values(room).filter(user => user == null).length == 3) {
+            deleteRoom();
+            navigation.navigate('Home', { user_id: user_id })
+        }
+        const checkCol = ["user1", "user2", "user3", "user4"];
+        for (let i = 0; i < 4; i++) {
+            if (userCheck[i] == user_id) {
+                CheckData(checkCol[i]);
+                break;
+            }
+        }
+    }
+
+    const deleteRoom = async () => {
+        await axios.post('http://10.0.2.2:3000/Delete_room', {
+            room_number: room.room_number,
+        })
+            .then((response) => {
+                navigation.navigate('Home', { user_id: user_id })
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const CheckData = async (col) => {
+        console.log(col, user_id);
+        await axios.post('http://10.0.2.2:3000/Exit_room', {
+            user: col,
+            room_number: room.room_number,
+        })
+            .then((response) => {
+                navigation.navigate('Home', { user_id: user_id })
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+
+    const openModal = () => {
+        setShowModal(true);
+    }
 
     const mapRef = useRef(null);
 
@@ -67,11 +113,19 @@ const Join_room = ({ navigation, route, props }) => {
                     <View style={styles.locationContainer}>
                         <Text style={[styles.Text1, { fontSize: 18 }]}>{room.room_name}</Text>
                         <TouchableOpacity
-                            onPress={() => navigation.navigate('Chat')} // ChatScreen 대신 실제 Chat 화면의 네비게이션 이름을 사용하십시오.
+                            onPress={() => navigation.navigate('Chat', { room: room })} // ChatScreen 대신 실제 Chat 화면의 네비게이션 이름을 사용하십시오.
                         >
                             <Image
                                 style={styles.locationIcon2}
                                 source={require('../assets/images/chat.png')} // Chat 버튼 이미지 경로
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={openModal} // 이미지 클릭시 모달 표시
+                        >
+                            <Image
+                                style={styles.locationIcon3}
+                                source={require('../assets/images/exit.png')} // 나가기 버튼 이미지 경로
                             />
                         </TouchableOpacity>
                     </View>
@@ -178,6 +232,32 @@ const Join_room = ({ navigation, route, props }) => {
             </View>
             <View style={{ marginBottom: 3 }} />
             <View style={styles.container3}></View>
+            <Modal
+                visible={showModal}
+                transparent={true}
+                animationType="fade"
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>알림</Text>
+                        <Text style={styles.modalText}>정말로 나가시겠습니까?</Text>
+                        <View style={styles.modalButtonsContainer}>
+                            <TouchableOpacity
+                                style={styles.modalButton}
+                                onPress={handleExitRoom}
+                            >
+                                <Text>예</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.modalButton}
+                                onPress={() => setShowModal(false)} // 모달 닫기
+                            >
+                                <Text>아니오</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </ScrollView>
     );
 };
@@ -190,7 +270,7 @@ const styles = StyleSheet.create({
     Text1: {
         marginBottom: 20,
         marginTop: 10,
-        width: 320,
+        width: 258,
         color: 'black',
         fontWeight: 'bold',
     },
@@ -225,8 +305,13 @@ const styles = StyleSheet.create({
         marginRight: 5, // 이미지와 텍스트 사이 간격
     },
     locationIcon2: {
-        width: 40, // 이미지 너비 조절
-        height: 40, // 이미지 높이 조절
+        width: 48, // 이미지 너비 조절
+        height: 48, // 이미지 높이 조절
+        marginRight: 17,
+    },
+    locationIcon3: {
+        width: 33, // 이미지 너비 조절
+        height: 33, // 이미지 높이 조절
     },
     locationText: {
         color: 'black',
@@ -272,8 +357,26 @@ const styles = StyleSheet.create({
     modalTitle: {
         fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 30,
-        textAlign: 'center'
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    modalText: {
+        fontSize: 18,
+        marginBottom: 10,
+        textAlign: 'center',
+        marginTop: 20,
+    },
+    modalButtonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    modalButton: {
+        marginTop: 30,
+        backgroundColor: 'lightgray',
+        padding: 10,
+        borderRadius: 5,
+        width: 100,
+        alignItems: 'center',
     },
 });
 export default Join_room;

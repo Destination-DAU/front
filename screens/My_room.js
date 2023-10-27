@@ -1,40 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Modal, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { format } from 'date-fns';
 import ko from "date-fns/esm/locale/ko/index.js";
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const Search_room = ({ navigation, route }) => {
+const My_room = ({ navigation, route }) => {
     const [roomList, setRoomList] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [user_id, setUserId] = useState();
-    const [personList, setPersonList] = useState([]);
 
     const RoomClick = (room) => {
         setSelectedRoom(room);
-        navigation.navigate('Details_room', { room, user_id: user_id });
+        navigation.navigate('Join_room', { room, user_id: user_id });
     }
+
+    const handleExitRoom = () => {
+        setShowModal(false);
+    }
+
+    const openModal = () => {
+        setShowModal(true);
+    }
+
     const fetchRoomList = async () => {
         try {
-            const response = await axios.get('http://10.0.2.2:3000/Search_room');
+            const response = await axios.post('http://10.0.2.2:3000/My_room', {
+                user_id: user_id,
+            });
             console.log(response.data)
-            if (response.status === 200) {
-                setRoomList(response.data.result);
-                // console.log(response.data);
-            } else {
-                console.log('방 목록을 불러올 수 없습니다. 응답 상태 코드: ' + response.status);
-            }
+            setRoomList(response.data.result); // 가져온 데이터로 roomList 업데이트
         } catch (error) {
-            console.error('방 목록을 불러올 수 없습니다.', error);
+            console.log(error);
         }
     };
 
-
-
     useEffect(() => {
-        fetchRoomList();
-    }, []);
+        if (user_id) {
+            fetchRoomList();
+        }
+    }, [user_id]);
 
     React.useEffect(() => {
         console.log('route.params:', route.params);
@@ -52,7 +56,9 @@ const Search_room = ({ navigation, route }) => {
                             key={index}
                             style={styles.roomBox}
                             onPress={() => RoomClick(room)}>
-                            <Text style={styles.title}>{room.room_name}</Text>
+                            <View style={styles.locationContainer}>
+                                <Text style={styles.title}>{room.room_name}</Text>
+                            </View>
                             <View style={styles.locationContainer}>
                                 <Image
                                     style={styles.locationIcon}
@@ -108,6 +114,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         color: 'black',
+        width: 290,
     },
     locationContainer: {
         flexDirection: 'row',
@@ -116,13 +123,23 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     locationIcon: {
-        width: 20, // 이미지 너비 조절
-        height: 20, // 이미지 높이 조절
-        marginRight: 5, // 이미지와 텍스트 사이 간격
+        width: 20,
+        height: 20,
+        marginRight: 5,
+    },
+    locationIcon2: {
+        width: 30,
+        height: 30,
     },
     locationText: {
         fontSize: 12,
     },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
 });
 
-export default Search_room;
+export default My_room;

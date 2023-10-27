@@ -37,7 +37,7 @@ const Details_room = ({ navigation, route, props }) => {
     const [isModalVisible, setModalVisible] = useState(false); // 인원 모달 노출 여부
     const closeModal = () => {
         setModalVisible(false);
-     };
+    };
 
     const JoinRoom = async () => {
         await axios.post('http://10.0.2.2:3000/Detail_room', {
@@ -50,21 +50,23 @@ const Details_room = ({ navigation, route, props }) => {
                 const userCheck = [response.data.result[0].user1, response.data.result[0].user2, response.data.result[0].user3, response.data.result[0].user4];
                 const checkCol = ["user1", "user2", "user3", "user4"];
                 for (let i = 0; i < userCheck.length; i++) {
-                    if(room.room_person-1 == i && userCheck[i] != null){
+                    if (room.room_person - 1 == i && userCheck[i] != null) {
                         setModalVisible(true);
                         break;
                     }
                     if (user_id === userCheck[i]) {
-                        navigation.navigate('Join_room', {room, user_id : user_id});
+                        Alert.alert('알림', '이미 참여중인 게시물입니다.');
+                        navigation.navigate('Home', { user_id: user_id });
                         break;
                     }
                     if (userCheck[i] == null) {
                         // insert 수행
+                        Alert.alert('알림', '게시물 참여가 완료되었습니다.');
                         CheckData(checkCol[i]);
-                        navigation.navigate('Join_room', {room, user_id : user_id});
+                        navigation.navigate('Home', { user_id: user_id });
                         break;
                     }
-                    
+
                 }
 
                 if (response.data.success) {
@@ -92,7 +94,6 @@ const Details_room = ({ navigation, route, props }) => {
             .catch((error) => {
                 console.log(error);
             });
-
     }
 
 
@@ -161,7 +162,7 @@ const Details_room = ({ navigation, route, props }) => {
                             /> // 경로 그리기
                         )}
                     </MapView>
-                    <Text style = {{marginTop : 10}}>출발지</Text>
+                    <Text style={{ marginTop: 10 }}>출발지</Text>
                     <Text style={styles.Text2}>{room.room_startPoint}</Text>
                     <Text>도착지</Text>
                     <Text style={styles.Text2}>{room.room_endPoint}</Text>
@@ -169,14 +170,14 @@ const Details_room = ({ navigation, route, props }) => {
             </View>
             <View style={styles.container2}>
                 <View style={{ paddingLeft: 20, paddingTop: 20 }}>
-                <View style={styles.locationContainer}>
+                    <View style={styles.locationContainer}>
                         <Image
                             style={styles.locationIcon}
                             source={require('../assets/images/crown.png')}
                         />
                         <Text> 방장   </Text>
                         <Text style={[styles.locationText]}>
-                            {room.user_id}
+                            {room.user1 ? room.user1 : (room.user2 ? room.user2 : (room.user3 ? room.user3 : room.user4))}
                         </Text>
                     </View>
                     <View style={styles.locationContainer}>
@@ -198,7 +199,7 @@ const Details_room = ({ navigation, route, props }) => {
                         />
                         <Text> 인원   </Text>
                         <Text style={styles.locationText}>
-                        {room.user2 == null ? '1' : room.user3 == null ? '2' : room.user4 == null ? '3' : '4'} / {room.room_person} 인
+                            {Object.values(room).filter(user => user !== null).length - 11} / {room.room_person} 인
                         </Text>
                     </View>
                 </View>
@@ -234,25 +235,25 @@ const Details_room = ({ navigation, route, props }) => {
                     >참여하기</Text>
                 </TouchableOpacity>
                 <Modal
-                  animationType="fade"
-                  transparent={true}
-                  visible={isModalVisible}
-               >
-                  <View style={styles.modalContainer}>
-                     <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>알림</Text>
-                        <Text style={styles.Text3}>방이 가득 찼습니다.</Text>
-                        <TouchableOpacity onPress={closeModal} style={styles.button2}>
-                           <Text style={{
-                        color: 'white',
-                        fontSize: 13,
-                        fontWeight: '400',
-                        padding: 13,
-                    }}>닫기</Text>
-                        </TouchableOpacity>
-                     </View>
-                  </View>
-               </Modal>
+                    animationType="fade"
+                    transparent={true}
+                    visible={isModalVisible}
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalTitle}>알림</Text>
+                            <Text style={styles.Text3}>방이 가득 찼습니다.</Text>
+                            <TouchableOpacity onPress={closeModal} style={styles.button2}>
+                                <Text style={{
+                                    color: 'white',
+                                    fontSize: 13,
+                                    fontWeight: '400',
+                                    padding: 13,
+                                }}>닫기</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
             </View>
         </ScrollView>
     );
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     Text2: {
-        marginBottom : 20,
+        marginBottom: 20,
         color: 'black',
     },
     Text3: {
@@ -334,18 +335,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-     },
-     modalContent: {
+    },
+    modalContent: {
         backgroundColor: 'white',
         borderRadius: 10,
         padding: 20,
         width: 300,
-     },
-     modalTitle: {
+    },
+    modalTitle: {
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 30,
         textAlign: 'center'
-     },
+    },
 })
 export default Details_room;
