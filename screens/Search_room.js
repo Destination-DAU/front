@@ -97,12 +97,13 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     roomBox: {
-        backgroundColor: 'white',
-        borderRadius: 20,
         padding: 25,
         marginBottom: 10,
         alignSelf: 'center',
         width: '100%',
+        borderRadius: 10,
+        borderWidth: 1, // 테두리 두께 추가
+        borderColor: "rgb(220, 220, 220)", // 테두리 색상
     },
     title: {
         fontSize: 14,
@@ -114,6 +115,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 5,
         marginBottom: 5,
+        
     },
     locationIcon: {
         width: 20, // 이미지 너비 조절
