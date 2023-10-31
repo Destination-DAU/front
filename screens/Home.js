@@ -1,15 +1,56 @@
-import React from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
+import axios from 'axios'
+import React, { useState, useEffect } from 'react';
+
+
 
 function Home({ navigation, route }) {
   const user_id = route.params.user_id;
+  const [my_data, setMydata] = useState();
+
+  const goHome = () => {
+
+    // navigation.dispatch(
+    //   CommonActions.reset({
+    //     index: 0,
+    //     routes: [
+    //       { name: 'Home', params: { user_id } }, // 'Home' 화면으로 이동
+    //     ],
+    //   })
+    // )
+  }
+
+  const goMy = async () => {
+    await axios.post('http://10.0.2.2:3000/My', {
+         user_id: user_id,
+      })
+         .then((response) => {
+            console.log(response.data.result);
+            setMydata(response.data.result);
+            if (response.data.success) {
+               navigation.dispatch(
+                  CommonActions.reset({
+                     index: 0,
+                     routes: [
+                       { name: 'My', params: { user_id, myData: response.data.result } }, // 'Home' 화면으로 이동
+                     ],
+                   })
+                );
+            }
+         })
+         .catch((error) => {
+            console.log(error);
+         });
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.container2}>
-      <Image
-        style={styles.locationIcon}
-        source={require('../assets/images/tmans.png')}
-      />
+        <Image
+          style={styles.locationIcon}
+          source={require('../assets/images/tmans.png')}
+        />
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
@@ -58,10 +99,37 @@ function Home({ navigation, route }) {
             />
           </TouchableOpacity>
         </View>
-        <Text style = {styles.Text1}>주변 사람들과 함께</Text>
-        <Text style = {styles.Text1}>택시 동승 서비스를 이용해보세요 !</Text>
+        <Text style={styles.Text1}>주변 사람들과 함께</Text>
+        <Text style={styles.Text1}>택시 동승 서비스를 이용해보세요 !</Text>
+      </View>
+      <View style={styles.container3}>
+        <View style={styles.container4}>
+          <TouchableOpacity
+            onPress={goHome}
+          >
+            <Image
+              style={styles.locationIcon7}
+              source={require('../assets/images/home2.png')}
+            />
+            <Text style={{ marginLeft: 93, fontSize: 12 }}>홈</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.container5}>
+          <TouchableOpacity
+            onPress={goMy}
+          >
+            <Image
+              style={styles.locationIcon7}
+              source={require('../assets/images/person.png')}
+            />
+            <Text style={{ marginLeft: 81.8, fontSize: 12 }}>내 정보</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
+
+
   );
 }
 
@@ -75,14 +143,40 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
   },
+  container3: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    height: 60,
+  },
+  container4: {
+    backgroundColor: "white",
+    // alignItems: "center",
+    width: "50%",
+    height: 60,
+    backgroundColor: "rgb(248, 248, 248)",
+    borderRadius: 2,
+    borderWidth: 1, // 테두리 두께 추가
+    borderColor: "rgb(235, 235, 235)", // 테두리 색상
+  },
+  container5: {
+    backgroundColor: "white",
+    // alignItems: "center",
+    width: "50%",
+    height: 60,
+    backgroundColor: "rgb(248, 248, 248)",
+    borderRadius: 2,
+    borderWidth: 1, // 테두리 두께 추가
+    borderColor: "rgb(235, 235, 235)", // 테두리 색상
+  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: "80%",
     marginTop: 30,
   },
-    Text1:{
-      fontSize: 14,
+  Text1: {
+    fontSize: 14,
   },
 
   buttonContainer2: {
@@ -147,6 +241,20 @@ const styles = StyleSheet.create({
     height: 70,
     marginLeft: 80,
     marginTop: 20,
+  },
+  locationIcon6: {
+    marginLeft: 90,
+    marginTop: 7,
+    width: 30,
+    height: 30,
+    alignContent: "center",
+  },
+  locationIcon7: {
+    marginLeft: 84,
+    marginTop: 7,
+    width: 30,
+    height: 30,
+    alignContent: "center",
   },
 });
 

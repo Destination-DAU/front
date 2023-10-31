@@ -85,7 +85,7 @@ const Search_room = ({ navigation, route }) => {
                         </TouchableOpacity>
                     ))
                 ) : (
-                    <Text>데이터를 로딩 중입니다...</Text>
+                    <Text style = {{marginLeft : 50, marginTop : 300}}> 방이 존재하지 않거나, 데이터 로딩중입니다. </Text>
                 )}
             </View>
         </ScrollView>

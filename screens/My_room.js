@@ -91,7 +91,7 @@ const My_room = ({ navigation, route }) => {
                         </TouchableOpacity>
                     ))
                 ) : (
-                    <Text>데이터를 로딩 중입니다...</Text>
+                    <Text style = {{marginLeft : 110, marginTop : 300}}> 방이 존재하지 않습니다. </Text>
                 )}
             </View>
         </ScrollView>

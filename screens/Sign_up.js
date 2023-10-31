@@ -23,11 +23,13 @@ const Sign_up = ({ navigation }) => {
    const [user_question, setUser_question] = useState('졸업한 중학교는?');
    const [user_answer, setUser_answer] = useState('');
    const [confirmPsword, setUser_confirmPsword] = useState('');
+   const [user_phoneNumber, setUser_phoneNumber] = useState('');
+
 
    const handleSignUp = async () => {
       console.log(user_id);
       console.log(user_pw);
-      if (!user_id || !user_pw || !user_name || !user_gender || !user_question || !user_answer || !confirmPsword) {
+      if (!user_id || !user_pw || !user_name || !user_gender || !user_question || !user_answer || !confirmPsword || !user_phoneNumber) {
          Alert.alert('알림', '모두 입력해주세요.');
          return; // 함수 종료
       }
@@ -42,6 +44,7 @@ const Sign_up = ({ navigation }) => {
          user_gender: user_gender,
          user_question: user_question,
          user_answer: user_answer,
+         user_phoneNumber: user_phoneNumber,
       })
          .then((response) => {
             console.log(response.data);
@@ -154,7 +157,16 @@ const Sign_up = ({ navigation }) => {
                   // underlineColorAndroid={'grey'}
                   />
                </View>
-               <Text> </Text>
+
+               <Text style={{ color: 'black', paddingBottom: 10 }}>전화번호 *</Text>
+               <View style={styles.inputBox}>
+                  <TextInput
+                     onChangeText={(text) => setUser_phoneNumber(text)}
+                     placeholder={'010-1111-2222'}
+                  // underlineColorAndroid={'grey'}
+                  />
+               </View>
+               <View style = {{marginBottom: 10}}></View>
                <TouchableOpacity onPress={handleSignUp} style={styles.button}>
                   <Text style={{
                      color: 'white',
@@ -164,7 +176,7 @@ const Sign_up = ({ navigation }) => {
                   }}
                   >회원가입</Text>
                </TouchableOpacity>
-
+               <View style = {{marginBottom: 20}}></View>
             </View>
             <View >
                <View >

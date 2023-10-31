@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { CommonActions } from '@react-navigation/native';
 
 import {
    SafeAreaView,
@@ -11,7 +12,7 @@ import {
    Image,
    Alert,
 } from 'react-native'
-
+import {KeyboardAvoidingView} from 'react-native';
 //import AutoHeightImage from "react-native-auto-height-image";
 
 const Login = ({ navigation }) => {
@@ -32,7 +33,14 @@ const Login = ({ navigation }) => {
          .then((response) => {
             console.log(response.data);
             if (response.data.success) {
-               navigation.navigate('Home', {user_id: user_id});
+               navigation.dispatch(
+                  CommonActions.reset({
+                     index: 0,
+                     routes: [
+                       { name: 'Home', params: { user_id } }, // 'Home' 화면으로 이동
+                     ],
+                   })
+                );
             }
             if (response.data.msg == "존재하지 않는 아이디입니다.") {
                Alert.alert('알림', "존재하지 않는 아이디입니다.");
@@ -55,13 +63,13 @@ const Login = ({ navigation }) => {
                source={require('../assets/images/tmans.png')}></Image>
          </View>
          <View style={styles.inputContainer}>
-            <View style={styles.inputBox}>
+         <KeyboardAvoidingView style={styles.inputBox} behavior="padding" enabled>
                <TextInput
                   placeholder={'아이디'}
                   value={user_id}
                   onChangeText={(text) => setUser_id(text)}
                />
-            </View>
+            </KeyboardAvoidingView>
             <View style={styles.inputBox}>
                <TextInput
                   placeholder={'비밀번호'}

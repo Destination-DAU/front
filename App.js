@@ -16,18 +16,24 @@ import Details_room from "./screens/Details_room"
 import Join_room from "./screens/Join_room"
 import Chat from "./screens/Chat"
 import My_room from "./screens/My_room"
+import My from "./screens/My"
+import Update_user from "./screens/Update_user"
+import Update_bank from "./screens/Update_bank"
+
+
 
 
 
 const Stack = createStackNavigator();
 
+
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Login'>
-        <Stack.Screen name="Home" component={Home} options={{ title: '홈' }} />
+        <Stack.Screen name="Home" component={Home} options={{ title: null }} />
         <Stack.Screen name="Maps" component={Maps} options={{ title: '맵' }} />
-        <Stack.Screen name="Login" component={Login} options={{ title: '로그인' }} />
+        <Stack.Screen name="Login" component={Login} options={{ title: null }} />
         <Stack.Screen name="Sign_up" component={Sign_up} options={{ title: '회원가입' }} />
         <Stack.Screen name="Find_id" component={Find_id} options={{ title: '아이디 찾기' }} />
         <Stack.Screen name="Find_pw" component={Find_pw} options={{ title: '비밀번호 찾기' }} />
@@ -38,8 +44,12 @@ export default function App() {
         <Stack.Screen name="Join_room" component={Join_room} options={{ title: '게시물' }} />
         <Stack.Screen name="Chat" component={Chat} options={{ title: '채팅' }} />
         <Stack.Screen name="My_room" component={My_room} options={{ title: '내 게시물' }} />
-
+        <Stack.Screen name="My" component={My} options={{ title: null }} />
+        <Stack.Screen name="Update_user" component={Update_user} options={{ title: '개인정보 수정' }} />
+        <Stack.Screen name="Update_bank" component={Update_bank} options={{ title: '개인정보 수정' }} />
+        
       </Stack.Navigator>
     </NavigationContainer>
+
   );
 }
