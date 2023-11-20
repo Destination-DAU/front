@@ -97,6 +97,22 @@ const Join_room = ({ navigation, route, props }) => {
     };
 
     useEffect(() => {
+        if (room.room_origin_lat && room.room_origin_lon) {
+            setOrigin({
+                latitude: parseFloat(room.room_origin_lat),
+                longitude: parseFloat(room.room_origin_lon),
+            });
+        }
+
+        if (room.room_destination_lat && room.room_destination_lon) {
+            setDestination({
+                latitude: parseFloat(room.room_destination_lat),
+                longitude: parseFloat(room.room_destination_lon),
+            });
+        }
+    }, [room]);
+    
+    useEffect(() => {
         // 출발지와 도착지가 잘 설정 되었으면 경로그리기 최적화 시킴
         if (origin && destination) {
             mapRef.current?.fitToCoordinates([origin, destination], { edgePadding });
@@ -135,8 +151,10 @@ const Join_room = ({ navigation, route, props }) => {
                         provider={PROVIDER_GOOGLE}
                         initialRegion={INITIAL_POSITION}
                     >
-                        {origin && <Marker coordinate={origin} image={require('../assets/images/origin.png')} />}
-                        {destination && <Marker coordinate={destination} image={require('../assets/images/destination.png')} />}
+                        {origin && <Marker coordinate={origin}
+                            image={require('../assets/images/origin.png')} />}
+                        {destination && <Marker coordinate={destination}
+                            image={require('../assets/images/destination.png')} />}
                         {origin && destination && (
                             <MapViewDirections
                                 origin={origin}

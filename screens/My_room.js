@@ -105,11 +105,12 @@ const styles = StyleSheet.create({
     roomBox: {
         borderRadius: 10,
         borderWidth: 1, // 테두리 두께 추가
-        borderColor: "rgb(220, 220, 220)",
         padding: 25,
         marginBottom: 10,
         alignSelf: 'center',
         width: '100%',
+        borderColor: "rgb(200, 200, 200)", // 테두리 색상
+        backgroundColor: "white"
     },
     title: {
         fontSize: 14,

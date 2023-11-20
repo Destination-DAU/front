@@ -19,6 +19,8 @@ import My_room from "./screens/My_room"
 import My from "./screens/My"
 import Update_user from "./screens/Update_user"
 import Update_bank from "./screens/Update_bank"
+import Explain from "./screens/Explain"
+
 
 
 
@@ -47,6 +49,7 @@ export default function App() {
         <Stack.Screen name="My" component={My} options={{ title: null }} />
         <Stack.Screen name="Update_user" component={Update_user} options={{ title: '개인정보 수정' }} />
         <Stack.Screen name="Update_bank" component={Update_bank} options={{ title: '개인정보 수정' }} />
+        <Stack.Screen name="Explain" component={Explain} options={{ title: '이용안내' }} />
         
       </Stack.Navigator>
     </NavigationContainer>

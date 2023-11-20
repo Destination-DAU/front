@@ -103,7 +103,8 @@ const styles = StyleSheet.create({
         width: '100%',
         borderRadius: 10,
         borderWidth: 1, // 테두리 두께 추가
-        borderColor: "rgb(220, 220, 220)", // 테두리 색상
+        borderColor: "rgb(200, 200, 200)", // 테두리 색상
+        backgroundColor: "white"
     },
     title: {
         fontSize: 14,

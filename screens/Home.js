@@ -89,7 +89,7 @@ function Home({ navigation, route }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button2}
-            onPress={() => navigation.navigate("Create_room", { user_id: user_id })}
+            onPress={() => navigation.navigate("Explain", { user_id: user_id })}
           >
             <Text style={styles.buttonText}>이용안내</Text>
             <Text style={{ fontSize: 10, marginTop: 5, marginLeft: 20, }}>FAQ 자주 묻는 질문</Text>
