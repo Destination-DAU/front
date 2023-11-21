@@ -8,10 +8,11 @@ const My_room = ({ navigation, route }) => {
     const [roomList, setRoomList] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [user_id, setUserId] = useState();
+    const [user_name, setUserName] = useState();
 
     const RoomClick = (room) => {
         setSelectedRoom(room);
-        navigation.navigate('Join_room', { room, user_id: user_id });
+        navigation.navigate('Join_room', { room, user_id: user_id, user_name: user_name });
     }
 
     const handleExitRoom = () => {
@@ -25,7 +26,7 @@ const My_room = ({ navigation, route }) => {
     const fetchRoomList = async () => {
         try {
             const response = await axios.post('http://10.0.2.2:3000/My_room', {
-                user_id: user_id,
+                user_name: user_name,
             });
             console.log(response.data)
             setRoomList(response.data.result); // 가져온 데이터로 roomList 업데이트
@@ -35,15 +36,17 @@ const My_room = ({ navigation, route }) => {
     };
 
     useEffect(() => {
-        if (user_id) {
+        if (user_name) {
             fetchRoomList();
         }
-    }, [user_id]);
+    }, [user_name]);
 
     React.useEffect(() => {
         console.log('route.params:', route.params);
         if (route.params && route.params.user_id) {
             setUserId(route.params.user_id)
+            setUserName(route.params.user_name)
+
         }
     }, [route.params]);
 
@@ -58,6 +61,7 @@ const My_room = ({ navigation, route }) => {
                             onPress={() => RoomClick(room)}>
                             <View style={styles.locationContainer}>
                                 <Text style={styles.title}>{room.room_name}</Text>
+                                {/* <Text style={styles.title}>{user_name}</Text> */}
                             </View>
                             <View style={styles.locationContainer}>
                                 <Image

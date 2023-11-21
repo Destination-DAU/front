@@ -31,7 +31,7 @@ const INITIAL_POSITION = {
 };
 
 const Details_room = ({ navigation, route, props }) => {
-    const { room, user_id } = route.params;
+    const { room, user_id, user_name } = route.params;
     const [origin, setOrigin] = useState(undefined);
     const [destination, setDestination] = useState(undefined);
     const [isModalVisible, setModalVisible] = useState(false); // 인원 모달 노출 여부
@@ -42,7 +42,7 @@ const Details_room = ({ navigation, route, props }) => {
     const JoinRoom = async () => {
         await axios.post('http://10.0.2.2:3000/Detail_room', {
             room_number: room.room_number,
-            user_id: room.user_id,
+            // user_id: room.user_id,
         })
             .then((response) => {
                 console.log(response.data);
@@ -54,16 +54,16 @@ const Details_room = ({ navigation, route, props }) => {
                         setModalVisible(true);
                         break;
                     }
-                    if (user_id === userCheck[i]) {
+                    if (user_name === userCheck[i]) {
                         Alert.alert('알림', '이미 참여중인 게시물입니다.');
-                        navigation.navigate('Home', { user_id: user_id });
+                        navigation.navigate('Home', { user_id: user_id, user_name: user_name });
                         break;
                     }
                     if (userCheck[i] == null) {
                         // insert 수행
                         Alert.alert('알림', '게시물 참여가 완료되었습니다.');
                         CheckData(checkCol[i]);
-                        navigation.navigate('Home', { user_id: user_id });
+                        navigation.navigate('Home', { user_id: user_id, user_name: user_name });
                         break;
                     }
 
@@ -82,11 +82,11 @@ const Details_room = ({ navigation, route, props }) => {
 
 
     const CheckData = async (col) => {
-        console.log(col, user_id);
+        console.log(col, user_name);
         await axios.post('http://10.0.2.2:3000/Check_data', {
             room_number: room.room_number,
             user: col,
-            user_id: user_id,
+            user_name: user_name,
         })
             .then((response) => {
                 console.log(response.data);

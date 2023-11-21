@@ -33,6 +33,7 @@ const Update_user = ({ navigation, route }) => {
             })
             .catch((error) => {
                 console.log(error);
+                Alert.alert('알림', '이미 존재하는 닉네임입니다.');
             });
     }
 

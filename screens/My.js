@@ -20,6 +20,7 @@ import { CommonActions } from '@react-navigation/native';
 
 const My = ({ navigation, route }) => {
     const user_id = route.params.user_id;
+
     const myData = route.params.myData;
     const [user_name, setUser_name] = useState(myData[0].user_name);
 
@@ -40,7 +41,7 @@ const My = ({ navigation, route }) => {
             CommonActions.reset({
                 index: 0,
                 routes: [
-                    { name: 'Home', params: { user_id } }, // 'Home' 화면으로 이동
+                    { name: 'Home', params: { user_id, user_name: user_name } }, // 'Home' 화면으로 이동
                 ],
             })
         )
@@ -72,7 +73,7 @@ const My = ({ navigation, route }) => {
                 <Text style={styles.Text1}>개인정보 수정</Text>
                 <Text style={styles.Text2}>사용자</Text>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate("Update_user", { myData: myData, user_id: user_id })}>
+                    onPress={() => navigation.navigate("Update_user", { myData: myData, user_id: user_id, user_name: user_name })}>
                     <View style={styles.container6}>
                         <View style={styles.container7}>
                             <Image
@@ -105,7 +106,7 @@ const My = ({ navigation, route }) => {
                 <View style={{ marginTop: 20 }}></View>
                 <Text style={styles.Text2}>은행</Text>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate("Update_bank", { myData: myData, user_id: user_id })}
+                    onPress={() => navigation.navigate("Update_bank", { myData: myData, user_id: user_id, user_name: user_name })}
                 >
                     <View style={styles.container8}>
                         <Text style={myData[0].user_bnum ? styles.Text7 : styles.Text5}>{myData[0].user_bank ? myData[0].user_bank : "은행을 설정해 주세요."}</Text>
@@ -117,7 +118,7 @@ const My = ({ navigation, route }) => {
                 </TouchableOpacity>
                 <Text style={styles.Text2}>계좌번호</Text>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate("Update_bank", { myData: myData, user_id: user_id })}
+                    onPress={() => navigation.navigate("Update_bank", { myData: myData, user_id: user_id, user_name: user_name })}
                 >
                     <View style={styles.container8}>
                         <Text style={myData[0].user_bnum ? styles.Text7 : styles.Text5}>{myData[0].user_bnum ? myData[0].user_bnum : "계좌번호를 설정해 주세요."}</Text>

@@ -31,13 +31,13 @@ const Login = ({ navigation }) => {
          user_pw: user_pw,
       })
          .then((response) => {
-            console.log(response.data);
+            console.log(response.data.user_name);
             if (response.data.success) {
                navigation.dispatch(
                   CommonActions.reset({
                      index: 0,
                      routes: [
-                       { name: 'Home', params: { user_id } }, // 'Home' 화면으로 이동
+                       { name: 'Home', params: { user_id, user_name: response.data.user_name } }, // 'Home' 화면으로 이동
                      ],
                    })
                 );

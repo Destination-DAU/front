@@ -7,6 +7,8 @@ import React, { useState, useEffect } from 'react';
 
 function Home({ navigation, route }) {
   const user_id = route.params.user_id;
+  const {user_name} = route.params;
+
   const [my_data, setMydata] = useState();
 
   const goHome = () => {
@@ -33,7 +35,7 @@ function Home({ navigation, route }) {
                   CommonActions.reset({
                      index: 0,
                      routes: [
-                       { name: 'My', params: { user_id, myData: response.data.result } }, // 'Home' 화면으로 이동
+                       { name: 'My', params: { user_id, myData: response.data.result, user_name } }, // 'Home' 화면으로 이동
                      ],
                    })
                 );
@@ -54,9 +56,10 @@ function Home({ navigation, route }) {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("Search_room", { user_id: user_id })}
+            onPress={() => navigation.navigate("Search_room", { user_id: user_id, user_name: user_name })}
           >
             <Text style={styles.buttonText}>방 검색</Text>
+            {/* <Text>{user_name}</Text> */}
             <Text style={{ fontSize: 10, marginTop: 5, marginLeft: 20, }}>동승으로 저렴한 이동</Text>
             <Image
               style={styles.locationIcon2}
@@ -65,7 +68,7 @@ function Home({ navigation, route }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("My_room", { user_id: user_id })}
+            onPress={() => navigation.navigate("My_room", { user_id: user_id, user_name: user_name })}
           >
             <Text style={styles.buttonText}>내 방</Text>
             <Text style={{ fontSize: 10, marginTop: 5, marginLeft: 20, }}>참여한 방 관리</Text>
@@ -78,7 +81,7 @@ function Home({ navigation, route }) {
         <View style={styles.buttonContainer2}>
           <TouchableOpacity
             style={styles.button2}
-            onPress={() => navigation.navigate("Create_room", { user_id: user_id })}
+            onPress={() => navigation.navigate("Create_room", { user_id: user_id, user_name: user_name })}
           >
             <Text style={styles.buttonText}>방 만들기</Text>
             <Text style={{ fontSize: 10, marginTop: 5, marginLeft: 20, }}>원하는 시간 및 위치 설정</Text>
@@ -89,7 +92,7 @@ function Home({ navigation, route }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button2}
-            onPress={() => navigation.navigate("Explain", { user_id: user_id })}
+            onPress={() => navigation.navigate("Explain", { user_id: user_id, user_name: user_name })}
           >
             <Text style={styles.buttonText}>이용안내</Text>
             <Text style={{ fontSize: 10, marginTop: 5, marginLeft: 20, }}>FAQ 자주 묻는 질문</Text>

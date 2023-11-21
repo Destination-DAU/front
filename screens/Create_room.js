@@ -51,6 +51,7 @@ function Create_room({ navigation, route }) {
    const [startTime, setStartTime] = useState(new Date()); // 선택 날짜
    const [title, setTitle] = useState();
    const [user_id, setUserId] = useState();
+   const [user_name, setUserName] = useState();
 
 
    const CreateRoom = async () => {
@@ -65,12 +66,12 @@ function Create_room({ navigation, route }) {
          room_origin_lon: origin.longitude,
          room_destination_lat: destination.latitude,
          room_destination_lon: destination.longitude,
-         user1: user_id,
+         user1: user_name,
       })
          .then((response) => {
             console.log(response.data);
             if (response.data.success) {
-               navigation.navigate('Home', {user_id : user_id});
+               navigation.navigate('Home', {user_id : user_id, user_name: user_name});
             }
          })
          .catch((error) => {
@@ -141,6 +142,9 @@ function Create_room({ navigation, route }) {
       }
       if (route.params && route.params.user_id){
          setUserId(route.params.user_id)
+      }
+      if (route.params && route.params.user_name){
+         setUserName(route.params.user_name)
       }
    }, [route.params]);
 

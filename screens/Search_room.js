@@ -9,11 +9,12 @@ const Search_room = ({ navigation, route }) => {
     const [roomList, setRoomList] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [user_id, setUserId] = useState();
+    const [user_name, setUserName] = useState();
     const [personList, setPersonList] = useState([]);
 
     const RoomClick = (room) => {
         setSelectedRoom(room);
-        navigation.navigate('Details_room', { room, user_id: user_id });
+        navigation.navigate('Details_room', { room, user_id: user_id, user_name: user_name });
     }
     const fetchRoomList = async () => {
         try {
@@ -40,6 +41,7 @@ const Search_room = ({ navigation, route }) => {
         console.log('route.params:', route.params);
         if (route.params && route.params.user_id) {
             setUserId(route.params.user_id)
+            setUserName(route.params.user_name)
         }
     }, [route.params]);
 
@@ -53,6 +55,7 @@ const Search_room = ({ navigation, route }) => {
                             style={styles.roomBox}
                             onPress={() => RoomClick(room)}>
                             <Text style={styles.title}>{room.room_name}</Text>
+                            {/* <Text style={styles.title}>{user_name}</Text> */}
                             <View style={styles.locationContainer}>
                                 <Image
                                     style={styles.locationIcon}

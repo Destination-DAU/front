@@ -31,7 +31,7 @@ const INITIAL_POSITION = {
 };
 
 const Join_room = ({ navigation, route, props }) => {
-    const { room, user_id } = route.params;
+    const { room, user_id, user_name } = route.params;
     const [origin, setOrigin] = useState(undefined);
     const [destination, setDestination] = useState(undefined);
     const [isModalVisible, setModalVisible] = useState(false); // 인원 모달 노출 여부
@@ -59,7 +59,7 @@ const Join_room = ({ navigation, route, props }) => {
             room_number: room.room_number,
         })
             .then((response) => {
-                navigation.navigate('Home', { user_id: user_id })
+                navigation.navigate('Home', { user_id: user_id, user_name: user_name })
             })
             .catch((error) => {
                 console.log(error);
@@ -73,7 +73,7 @@ const Join_room = ({ navigation, route, props }) => {
             room_number: room.room_number,
         })
             .then((response) => {
-                navigation.navigate('Home', { user_id: user_id })
+                navigation.navigate('Home', { user_id: user_id, user_name: user_name })
             })
             .catch((error) => {
                 console.log(error);
@@ -129,7 +129,7 @@ const Join_room = ({ navigation, route, props }) => {
                     <View style={styles.locationContainer}>
                         <Text style={[styles.Text1, { fontSize: 18 }]}>{room.room_name}</Text>
                         <TouchableOpacity
-                            onPress={() => navigation.navigate('Chat', { room: room })} // ChatScreen 대신 실제 Chat 화면의 네비게이션 이름을 사용하십시오.
+                            onPress={() => navigation.navigate('Chat', { room: room })}
                         >
                             <Image
                                 style={styles.locationIcon2}
@@ -181,7 +181,7 @@ const Join_room = ({ navigation, route, props }) => {
                         />
                         <Text> 방장   </Text>
                         <Text style={styles.locationText}>
-                            {room.user_id}
+                            {room.user1 ? room.user1 : (room.user2 ? room.user2 : (room.user3 ? room.user3 : room.user4))}
                         </Text>
                     </View>
                     <View style={styles.locationContainer}>
