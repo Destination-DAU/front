@@ -52,9 +52,11 @@ function Create_room({ navigation, route }) {
    const [title, setTitle] = useState();
    const [user_id, setUserId] = useState();
    const [user_name, setUserName] = useState();
-
+   const [distance, setDistance] = useState();
+   const [price, setPrice] = useState(0);
 
    const CreateRoom = async () => {
+      
       await axios.post('http://10.0.2.2:3000/Create_room', {
          user_id: user_id,
          room_startPoint: startPoint,
@@ -67,18 +69,19 @@ function Create_room({ navigation, route }) {
          room_destination_lat: destination.latitude,
          room_destination_lon: destination.longitude,
          user1: user_name,
+         price: price,
       })
          .then((response) => {
             console.log(response.data);
             if (response.data.success) {
-               navigation.navigate('Home', {user_id : user_id, user_name: user_name});
+               navigation.navigate('Home', { user_id: user_id, user_name: user_name });
             }
          })
          .catch((error) => {
             console.log(error);
          });
       // 게시물 생성 버튼 누를 시 백으로 데이터 전송
-      };
+   };
 
    const openModal = () => {
       setModalVisible(true);
@@ -140,6 +143,9 @@ function Create_room({ navigation, route }) {
       if (route.params && route.params.destination) {
          setDestination(route.params.destination)
       }
+      if (route.params && route.params.distance) {
+         setDistance(route.params.distance * 1000)
+      }
       if (route.params && route.params.user_id){
          setUserId(route.params.user_id)
       }
@@ -147,6 +153,25 @@ function Create_room({ navigation, route }) {
          setUserName(route.params.user_name)
       }
    }, [route.params]);
+
+useEffect(() => {
+
+  if (distance) {
+    let calculatedPrice = 0;
+    if (distance - 2000 <= 0) {
+      calculatedPrice = 4800;
+    } else {
+      const calculatedCnt1 = (distance - 2000) / 125;
+      const calculatedTimeCnt = distance / 500;
+      console.log(distance, calculatedCnt1, calculatedTimeCnt);
+      calculatedPrice = 4800 + (100 * calculatedCnt1) + (100 * calculatedTimeCnt);
+      calculatedPrice = Math.round(calculatedPrice / 10) * 10;
+      console.log(calculatedPrice);
+    }
+    // setPrice 함수를 사용하여 price 상태를 업데이트합니다.
+    setPrice(calculatedPrice);
+  }
+}, [distance]);
 
    useEffect(() => {
       // 출발지와 도착지가 잘 설정 되었으면 경로그리기 최적화 시킴
@@ -167,12 +192,13 @@ function Create_room({ navigation, route }) {
 
    // 출발지 주소 선택
    const handleStartDestinationPress = () => {
-      navigation.navigate('Maps', { type: 'start' }, {user_id : user_id});
+      console.log('route.params:', route.params);
+      navigation.navigate('Maps', { type: 'start' }, { user_id: user_id, user_name: user_name });
    };
 
    // 도착지 주소 선택
    const handleEndDestinationPress = () => {
-      navigation.navigate('Maps', { type: 'end' }, {user_id : user_id});
+      navigation.navigate('Maps', { type: 'end' }, { user_id: user_id, user_name: user_name });
    };
 
    const titleSet = (text) => {
@@ -197,9 +223,9 @@ function Create_room({ navigation, route }) {
                   initialRegion={INITIAL_POSITION}
                >
                   {origin && <Marker coordinate={origin}
-                  image = {require('../assets/images/origin.png')} />}
+                     image={require('../assets/images/origin.png')} />}
                   {destination && <Marker coordinate={destination}
-                  image = {require('../assets/images/destination.png')} />}
+                     image={require('../assets/images/destination.png')} />}
                   {origin && destination && (
                      <MapViewDirections
                         origin={origin}
@@ -211,6 +237,9 @@ function Create_room({ navigation, route }) {
                      /> // 경로 그리기
                   )}
                </MapView>
+               {distance && 
+                  <Text style={styles.inputText2}>예상 금액 : {price.toLocaleString('ko-KR')} 원</Text>
+               }
                {/* 출발지 입력 상자 */}
                <TouchableOpacity style={[styles.inputBox]} onPress={handleStartDestinationPress}>
                   <Text style={styles.inputText2}>출발지</Text>

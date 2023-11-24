@@ -43,11 +43,11 @@ const Join_room = ({ navigation, route, props }) => {
         const userCheck = [room.user1, room.user2, room.user3, room.user4]
         if (Object.values(room).filter(user => user == null).length == 3) {
             deleteRoom();
-            navigation.navigate('Home', { user_id: user_id })
+            navigation.navigate('Home', { user_id: user_id, user_name: user_name })
         }
         const checkCol = ["user1", "user2", "user3", "user4"];
         for (let i = 0; i < 4; i++) {
-            if (userCheck[i] == user_id) {
+            if (userCheck[i] == user_name) {
                 CheckData(checkCol[i]);
                 break;
             }
@@ -111,7 +111,7 @@ const Join_room = ({ navigation, route, props }) => {
             });
         }
     }, [room]);
-    
+
     useEffect(() => {
         // 출발지와 도착지가 잘 설정 되었으면 경로그리기 최적화 시킴
         if (origin && destination) {
@@ -204,6 +204,16 @@ const Join_room = ({ navigation, route, props }) => {
                         <Text> 인원   </Text>
                         <Text style={styles.locationText}>
                             {users.filter(user => user !== null).length} / {room.room_person} 인
+                        </Text>
+                    </View>
+                    <View style={styles.locationContainer}>
+                        <Image
+                            style={styles.locationIcon}
+                            source={require('../assets/images/price.png')}
+                        />
+                        <Text> 가격   </Text>
+                        <Text style={styles.locationText}>
+                            {room.price} 원 / 인당 {Math.round((room.price / room.room_person) / 10) * 10} 원({room.room_person}인)
                         </Text>
                     </View>
                 </View>

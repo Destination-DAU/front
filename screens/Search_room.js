@@ -67,7 +67,7 @@ const Search_room = ({ navigation, route }) => {
                             </View>
                             <View style={styles.locationContainer}>
                                 <Image
-                                    style={styles.locationIcon}
+                                    style={styles.locationIcon2}
                                     source={require('../assets/images/time.png')}
                                 />
                                 <Text style={styles.locationText}>
@@ -82,13 +82,22 @@ const Search_room = ({ navigation, route }) => {
                                     source={require('../assets/images/people.png')}
                                 />
                                 <Text style={styles.locationText}>
-                                    {Object.values(room).filter(user => user !== null).length - 11} / {room.room_person} 인
+                                    {Object.values(room).filter(user => user !== null).length - 12} / {room.room_person} 인
+                                </Text>
+                            </View>
+                            <View style={styles.locationContainer}>
+                                <Image
+                                    style={styles.locationIcon2}
+                                    source={require('../assets/images/price.png')}
+                                />
+                                <Text style={styles.locationText}>
+                                    {room.price} 원
                                 </Text>
                             </View>
                         </TouchableOpacity>
                     ))
                 ) : (
-                    <Text style = {{marginLeft : 50, marginTop : 300}}> 방이 존재하지 않거나, 데이터 로딩중입니다. </Text>
+                    <Text style={{ marginLeft: 50, marginTop: 300 }}> 방이 존재하지 않거나, 데이터 로딩중입니다. </Text>
                 )}
             </View>
         </ScrollView>
@@ -119,11 +128,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 5,
         marginBottom: 5,
-        
+
     },
     locationIcon: {
         width: 20, // 이미지 너비 조절
         height: 20, // 이미지 높이 조절
+        marginRight: 5, // 이미지와 텍스트 사이 간격
+    },
+    locationIcon2: {
+        width: 15, // 이미지 너비 조절
+        height: 15, // 이미지 높이 조절
         marginRight: 5, // 이미지와 텍스트 사이 간격
     },
     locationText: {

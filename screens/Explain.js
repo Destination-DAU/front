@@ -5,7 +5,8 @@ import { format } from 'date-fns';
 import ko from "date-fns/esm/locale/ko/index.js";
 
 const Explain = ({ navigation, route }) => {
-
+    const user_id = route.params.user_id;
+    const {user_name} = route.params;
     return (
         <View style={styles.container}>
             <Text style={styles.text1}>자주 묻는 질문</Text>

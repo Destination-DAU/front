@@ -71,8 +71,10 @@ function Maps({ navigation, route }) {
   const [showDirections, setShowDirections] = useState(false);
   const [distance, setDistance] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [price, setPrice] = useState(0);
   const mapRef = useRef(null);
   const user_id = route.params.user_id;
+  const user_name = route.params.user_name;
   const moveTo = async (position) => {
     const camera = await mapRef.current?.getCamera();
     if (camera) {
@@ -88,7 +90,7 @@ function Maps({ navigation, route }) {
     left: edgePaddingValue,
   };
 
-  const traceRouteOnReady = (args) => {
+  const traceRouteOnReady = (args) => { 
     if (args) {
       setDistance(args.distance);
       setDuration(args.duration);
@@ -101,7 +103,13 @@ function Maps({ navigation, route }) {
       mapRef.current?.fitToCoordinates([origin, destination], { edgePadding });
     }
   };
-
+  React.useEffect(() => {
+    console.log('route.params:', route.params);
+    if (route.params && route.params.user_id) {
+        setUserId(route.params.user_id)
+        setUserName(route.params.user_name)
+    }
+}, [route.params]);
   useEffect(() => {
     // origin과 destination 값이 존재할 때만 실행
     if (origin && destination) {
@@ -113,10 +121,12 @@ function Maps({ navigation, route }) {
       if (!destination)
         moveTo(origin)
     }
+
   }, [origin, destination]);
 
   const checkRoute = () => {
     // 출발지, 도착지 데이터 전송
+
     if (origin && destination) {
       reverseGeocode(origin.latitude, origin.longitude, (startAddress) => {
         reverseGeocode(destination.latitude, destination.longitude, (endAddress) => {
@@ -126,6 +136,8 @@ function Maps({ navigation, route }) {
             origin: origin,
             destination: destination,
             user_id: user_id,
+            distance: distance,
+            user_name: user_name,
           });
         });
       });

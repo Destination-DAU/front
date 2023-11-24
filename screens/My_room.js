@@ -46,7 +46,6 @@ const My_room = ({ navigation, route }) => {
         if (route.params && route.params.user_id) {
             setUserId(route.params.user_id)
             setUserName(route.params.user_name)
-
         }
     }, [route.params]);
 
@@ -74,7 +73,7 @@ const My_room = ({ navigation, route }) => {
                             </View>
                             <View style={styles.locationContainer}>
                                 <Image
-                                    style={styles.locationIcon}
+                                    style={styles.locationIcon2}
                                     source={require('../assets/images/time.png')}
                                 />
                                 <Text style={styles.locationText}>
@@ -89,13 +88,22 @@ const My_room = ({ navigation, route }) => {
                                     source={require('../assets/images/people.png')}
                                 />
                                 <Text style={styles.locationText}>
-                                    {Object.values(room).filter(user => user !== null).length - 11} / {room.room_person} 인
+                                    {Object.values(room).filter(user => user !== null).length - 12} / {room.room_person} 인
+                                </Text>
+                            </View>
+                            <View style={styles.locationContainer}>
+                                <Image
+                                    style={styles.locationIcon}
+                                    source={require('../assets/images/price.png')}
+                                />
+                                <Text style={styles.locationText}>
+                                    {room.price} 원
                                 </Text>
                             </View>
                         </TouchableOpacity>
                     ))
                 ) : (
-                    <Text style = {{marginLeft : 110, marginTop : 300}}> 방이 존재하지 않습니다. </Text>
+                    <Text style={{ marginLeft: 110, marginTop: 300 }}> 방이 존재하지 않습니다. </Text>
                 )}
             </View>
         </ScrollView>
@@ -134,8 +142,9 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
     locationIcon2: {
-        width: 30,
-        height: 30,
+        width: 15,
+        height: 15,
+        marginRight: 5,
     },
     locationText: {
         fontSize: 12,

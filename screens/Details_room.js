@@ -199,7 +199,17 @@ const Details_room = ({ navigation, route, props }) => {
                         />
                         <Text> 인원   </Text>
                         <Text style={styles.locationText}>
-                            {Object.values(room).filter(user => user !== null).length - 11} / {room.room_person} 인
+                            {Object.values(room).filter(user => user !== null).length - 12} / {room.room_person} 인
+                        </Text>
+                    </View>
+                    <View style={styles.locationContainer}>
+                        <Image
+                            style={styles.locationIcon}
+                            source={require('../assets/images/price.png')}
+                        />
+                        <Text> 가격   </Text>
+                        <Text style={styles.locationText}>
+                            {room.price} 원 / 인당 {Math.round((room.price / room.room_person) / 10) * 10}원 ({room.room_person}인)
                         </Text>
                     </View>
                 </View>
